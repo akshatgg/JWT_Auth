@@ -1,4 +1,6 @@
-const PORT=process.env.PORT || 5000
+require('dotenv').config();
+
+const PORT=process.env.PORT 
 const app=require("./app.js")
 
 app.listen(PORT,()=>{
