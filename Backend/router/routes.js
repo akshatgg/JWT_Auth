@@ -5,6 +5,6 @@ const {signup,signin}=require("../controller/controller")
 
 
  authrouter.post("/signup",signup)
-authrouter.get("/signin",signin)
+authrouter.post("/signin",signin)
 
  module.exports=authrouter
