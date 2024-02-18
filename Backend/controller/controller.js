@@ -142,17 +142,19 @@ catch(error){
 
 exports.userinfo=async (req,res,next)=>{
   const userid=req.user.id;
-
+  
   try{
-
+  const user =await userModel.findById(userid)
+  return req.status(200).json({
+    sucess:true,
+    data:true
+  })
   }
-  catch{
-    
+  catch(e){
+    return req.status(400).json({
+        sucess:false,
+        data:false
+    })
   }
 }
-
-
-
-
-
 
