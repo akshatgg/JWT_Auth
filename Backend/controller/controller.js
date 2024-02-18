@@ -137,3 +137,22 @@ catch(error){
 
 
 
+
+
+
+exports.userinfo=async (req,res,next)=>{
+  const userid=req.user.id;
+
+  try{
+
+  }
+  catch{
+    
+  }
+}
+
+
+
+
+
+
