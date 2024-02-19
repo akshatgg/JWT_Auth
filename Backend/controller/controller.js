@@ -4,7 +4,7 @@ const emailvalidator = require("email-validator")
 exports.signup = async (req, res, next) => {
     try {
         const { name, email, password, confirmpassword } = req.body;
-
+ 
         // Check if any required field is missing
         if (!name || !email || !password || !confirmpassword) {
             return res.status(400).json({
@@ -160,3 +160,31 @@ exports.userinfo = async (req, res, next) => {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+exports.logout =  (req, res) => {
+    try {
+        const cookieOption = {
+            expires: new Date(0),
+            httpOnly: true
+        };
+        res.cookie("token", null, cookieOption)
+        res.status(200).json({
+            success: true,
+            message: "Logged out"
+        });
+    } catch (e) {
+        return res.status(400).json({
+            success: false,
+            message: e.message
+        });
+    }
+}

@@ -9,7 +9,7 @@ const jwtauth =(req,res,next)=>{
             message:'Not authorized'
         })
     }
-
+ 
 
 try{
     const payload=JWT.verify(token,process.env.SECRET);
