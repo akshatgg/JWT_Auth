@@ -1,27 +1,35 @@
+const express = require("express");
+const cookieParser = require('cookie-parser');
+const database = require("./config/db");
+const authRouter = require("./router/routes");
 
-const express=require("express")
+const app = express();
 
-const app=express();
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
-
-const database=require("./config/db")
-
+// Connect to the database
 database();
-const authrouter=require("./router/routes")
 
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
 
-app.use('/api/auth/',authrouter)
+// Routes
+app.use('/api/auth/', authRouter);
 
-
-
-app.use("/",(req,res)=>{    
+// Fallback route
+app.use("/", (req, res) => {
     res.status(200).json({
-        data:"JWTauth server"
-    })
-})
+        data: "JWT auth server"
+    });
+});
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+    });
+});
 
-
-
-module.exports=app
+module.exports = app;

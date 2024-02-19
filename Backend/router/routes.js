@@ -1,6 +1,6 @@
  const express=require('express')
  const authrouter=express.Router()
-
+const jwtauth=require('../middleware/jwtauth')
 const {signup,signin,userinfo}=require("../controller/controller")
 
 

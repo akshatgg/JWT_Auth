@@ -1,5 +1,5 @@
 const userModel = require("../model/schema");
-const emailvalidator=require("email-validator")
+const emailvalidator = require("email-validator")
 
 exports.signup = async (req, res, next) => {
     try {
@@ -31,7 +31,7 @@ exports.signup = async (req, res, next) => {
         }
 
         // Check if user with the same email already exists
-        const userExists = await userModel.findOne({ email });
+        const userExists = await (userModel.findOne({ email }))
         if (userExists) {
             return res.status(400).json({
                 success: false,
@@ -48,11 +48,11 @@ exports.signup = async (req, res, next) => {
             success: true,
             data: result
         });
-    } catch (error) {
-        console.log(error);
+    } catch (e) {
+        console.log(e);
         res.status(400).json({
             success: false,
-            message: "User not signed in"
+            message: e.message
         });
     }
 };
@@ -78,54 +78,54 @@ exports.signup = async (req, res, next) => {
 
 
 
-exports.signin= async (req,res)=>{
-const {email,password} =req.body
+exports.signin = async (req, res, next) => {
+    const { email, password } = req.body
 
-if(!email || !password){
-    return   res.status(400).json({
-        success: false,
-        message: "Enter properly email or password"
-    })
-
-}
- 
-
-try{
-
-    const user =await userModel
-    .findOne({email})
-    .select('+password');
-    
-    if(!user || user.password !== password){
-        return   res.status(400).json({
+    if (!email || !password) {
+        return res.status(400).json({
             success: false,
-            message: "Password is wrong or email not exist"
+            message: "Enter properly email or password"
+        })
+
+    }
+
+
+    try {
+
+        const user =await userModel
+            .findOne({ email })
+            .select('+password');
+
+        if (!user || user.password !== password) {
+            return res.status(400).json({
+                success: false,
+                message: "Password is wrong or email not exist"
+            })
+        }
+        const token = user.jwtToken();
+        user.password = undefined;                //not leak//
+
+        const cookieoption = {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true
+        };
+
+
+        res.cookie("token", token, cookieoption);
+        res.status(200).json({
+            success: true,
+            data: user
         })
     }
-    const token=user.jwtToken();
-    user.password =undefined;                //not leak//
-    
-    const cookieoption={
-        maxAge:24*60*60*1000,
-        httpOnly: true
-    };
-    
-    
-    res.cookie("token" , token, cookieoption);
-    res.status(200).json({
-        success: true,
-        data: user
-    })
-}
 
 
-catch(error){
-    console.log(error);
-    res.status(400).json({
-        success: false,
-        message: "Bad Request"
-    })
-}
+    catch (error) {
+        console.log(error);
+        res.status(400).json({
+            success: false,
+            message: "Bad Request"
+        })
+    }
 
 
 
@@ -140,21 +140,23 @@ catch(error){
 
 
 
-exports.userinfo=async (req,res,next)=>{
-  const userid=req.user.id;
-  
-  try{
-  const user =await userModel.findById(userid)
-  return req.status(200).json({
-    sucess:true,
-    data:true
-  })
-  }
-  catch(e){
-    return req.status(400).json({
-        sucess:false,
-        data:false
-    })
-  }
+exports.userinfo = async (req, res, next) => {
+    const userid = req.user.id;
+
+    try {
+        const user = await userModel.findById(userid)
+        return res.status(200).json({
+            sucess: true,
+            data: `${user.id}
+            ${user.name}
+            ${user.email}`
+        })
+    }
+    catch (e) {
+        return res.status(400).json({
+            sucess: false,
+            data: false
+        })
+    }
 }
 
