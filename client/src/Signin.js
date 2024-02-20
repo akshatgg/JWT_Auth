@@ -1,18 +1,49 @@
-// Signin.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Signin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const handleSignin = () => {
-        // Handle signin logic here
+    const handleSignin = async (e) => {
+        e.preventDefault();
+
+        // Input validation
+        if (!email || !password) {
+            setError('Please fill in all fields');
+            return;
+        }
+
+        try {
+            const userData = {
+                email: email,
+                password: password
+            };
+
+            // Send POST request to the backend API endpoint for signin
+            const response = await axios.post('/api/auth/signin', userData);
+
+            // Check if signin was successful
+            if (response.status === 200) {
+                console.log('Signin successful');
+                // Redirect or show success message
+            } else {
+                console.error('Signin failed');
+                // Handle other responses if needed
+            }
+        } catch (error) {
+            // Handle errors
+            setError(error.message);
+        }
     };
 
     return (
         <div className="absolute max-w-sm mx-auto mt-10 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] shadow-md p-6">
             <h2 className="text-2xl font-semibold mb-4 text-center">Signin</h2>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+
             <form onSubmit={handleSignin} className="space-y-4">
                 <input
                     type="email"
@@ -28,7 +59,7 @@ const Signin = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-2 border rounded-md"
                 />
-                <p className='text-center text-blue-500'><Link to="/">Register here</Link></p>
+                <p className='text-center text-blue-500'><Link to="/signup">Register here</Link></p>
                 <p className='text-center text-blue-500'><Link to="/forgot">Forget Password ?</Link></p>
 
                 <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md">
