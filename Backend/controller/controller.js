@@ -1,5 +1,6 @@
 const userModel = require("../model/schema");
 const emailvalidator = require("email-validator")
+const bcrypt = require('bcrypt');
 
 exports.signup = async (req, res, next) => {
     try {
@@ -96,7 +97,7 @@ exports.signin = async (req, res, next) => {
             .findOne({ email })
             .select('+password');
 
-        if (!user || user.password !== password) {
+        if (!user || (await bcrypt.compare(password, user.password))) {
             return res.status(400).json({
                 success: false,
                 message: "Password is wrong or email not exist"
@@ -123,7 +124,7 @@ exports.signin = async (req, res, next) => {
         console.log(error);
         res.status(400).json({
             success: false,
-            message: "Bad Request"
+            message: error.message
         })
     }
 

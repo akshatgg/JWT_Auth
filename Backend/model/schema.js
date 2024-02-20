@@ -23,6 +23,15 @@ const userSchema = new mongoose.Schema({
     maxlength: [50, 'Password cannot exceed 50 characters'],
     trim: true
   },
+  
+  confirmpassword:{
+    type: String,
+    required: [true, 'Password is required'],
+    minlength: [6, 'Password should be at least 6 characters long'],
+    maxlength: [50, 'Password cannot exceed 50 characters'],
+    trim: true
+  },
+
   forgotPasswordToken: {
     type: String
   },
@@ -34,11 +43,13 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+  if ((!this.isModified('password')) || (!this.isModified('confirmpassword'))) {
     return next();
   }
   try {
     this.password = await bcrypt.hash(this.password, 10);
+    this.confirmpassword = await bcrypt.hash(this.confirmpassword, 10);
+
     return next();
   } catch (error) {
     return next(error);
