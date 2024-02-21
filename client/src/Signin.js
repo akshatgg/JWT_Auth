@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -7,6 +8,7 @@ const Signin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     // Function to toggle login state
     const loginState = JSON.parse(sessionStorage.getItem('login'));
@@ -40,7 +42,12 @@ const Signin = () => {
                     title: "Signin Successful",
                     text: "You have successfully signed in.",
                     icon: "success"
-                });
+                }).then(() => {
+                    navigate('/');
+                    
+                }).then(()=>{
+                    window.location.reload(); 
+                })
                 // Redirect or show success message
             } else {
                 console.error('Signin failed');

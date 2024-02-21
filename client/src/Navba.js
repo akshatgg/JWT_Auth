@@ -1,12 +1,17 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 import { Avatar, Dropdown, Navbar } from 'flowbite-react';
+import { useNavigate } from 'react-router-dom';
 
 const Navba = () => {
+    const navigate = useNavigate();
+
     const loginState = JSON.parse(sessionStorage.getItem('login')); // Assuming 'loggedIn' is the key to check login state
  console.log(loginState);
  const changelogin=()=>{
             sessionStorage.setItem('login', JSON.stringify(!loginState));
+            navigate("/")
+            window.location.reload(); 
 
  }
     return (
@@ -28,7 +33,7 @@ const Navba = () => {
                                 <span className="block text-sm">Bonnie Green</span>
                                 <span className="block truncate text-sm font-medium">name@flowbite.com</span>
                             </Dropdown.Header>
-                            <Dropdown.Item>Dashboard</Dropdown.Item>
+                            <Link to="/dashboard"><Dropdown.Item>Dashboard</Dropdown.Item></Link>
                             <Dropdown.Item>Settings</Dropdown.Item>
                             <Dropdown.Item>Earnings</Dropdown.Item>
                             <Dropdown.Divider />
@@ -45,7 +50,7 @@ const Navba = () => {
             </div>
             <Navbar.Collapse>
                 <Navbar.Link href="/" active>Home</Navbar.Link>
-                <Link to="" className="text-black hover:text-[#2E879F]" onClick={changelogin}>Logout</Link>
+                {/* <Link to="" className="text-black hover:text-[#2E879F]" onClick={changelogin}>Logout</Link> */}
 
                 {/* Add other Navbar links here */}
             </Navbar.Collapse>
