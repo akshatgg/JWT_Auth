@@ -1,0 +1,56 @@
+import React from "react";
+import { Link } from 'react-router-dom';
+import { Avatar, Dropdown, Navbar } from 'flowbite-react';
+
+const Navba = () => {
+    const loginState = JSON.parse(sessionStorage.getItem('login')); // Assuming 'loggedIn' is the key to check login state
+ console.log(loginState);
+ const changelogin=()=>{
+            sessionStorage.setItem('login', JSON.stringify(!loginState));
+
+ }
+    return (
+        <Navbar fluid rounded>
+            <Navbar.Brand href="https://flowbite-react.com">
+                <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Flowbite React</span>
+            </Navbar.Brand>
+            <div className="flex md:order-2">
+                {loginState ? (
+                    <>
+                        <Dropdown
+                            arrowIcon={false}
+                            inline
+                            label={
+                                <Avatar alt="User settings" img="https://flowbite.com/docs/images/people/profile-picture-5.jpg" rounded />
+                            }
+                        >
+                            <Dropdown.Header>
+                                <span className="block text-sm">Bonnie Green</span>
+                                <span className="block truncate text-sm font-medium">name@flowbite.com</span>
+                            </Dropdown.Header>
+                            <Dropdown.Item>Dashboard</Dropdown.Item>
+                            <Dropdown.Item>Settings</Dropdown.Item>
+                            <Dropdown.Item>Earnings</Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item onClick={changelogin}> Sign out</Dropdown.Item>
+                        </Dropdown>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/signin" className="text-black hover:text-[#2E879F] mr-7">Signin</Link>
+                        <Link to="/signup" className="text-black hover:text-[#2E879F]">Signup</Link>
+                    </>
+                )}
+                <Navbar.Toggle />
+            </div>
+            <Navbar.Collapse>
+                <Navbar.Link href="/" active>Home</Navbar.Link>
+                <Link to="" className="text-black hover:text-[#2E879F]" onClick={changelogin}>Logout</Link>
+
+                {/* Add other Navbar links here */}
+            </Navbar.Collapse>
+        </Navbar>
+    );
+};
+
+export default Navba;

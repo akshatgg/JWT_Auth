@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Signin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
+    // Function to toggle login state
+    const loginState = JSON.parse(sessionStorage.getItem('login'));
+    const changelogin = () => {
+        sessionStorage.setItem('login', JSON.stringify(!loginState));
+    };
 
     const handleSignin = async (e) => {
         e.preventDefault();
@@ -27,7 +34,13 @@ const Signin = () => {
 
             // Check if signin was successful
             if (response.status === 200) {
+                changelogin(); // Toggle login state
                 console.log('Signin successful');
+                Swal.fire({
+                    title: "Signin Successful",
+                    text: "You have successfully signed in.",
+                    icon: "success"
+                });
                 // Redirect or show success message
             } else {
                 console.error('Signin failed');
@@ -38,6 +51,10 @@ const Signin = () => {
             setError(error.message);
         }
     };
+
+    if (loginState) {
+        return null; // If already logged in, don't render signin form
+    }
 
     return (
         <div className="absolute max-w-sm mx-auto mt-10 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] shadow-md p-6">

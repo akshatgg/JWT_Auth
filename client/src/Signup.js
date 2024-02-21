@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+// import 'sweetalert2/src/sweetalert2.scss';
 
 const Signup = () => {
     const [email, setEmail] = useState('');
@@ -23,25 +25,27 @@ const Signup = () => {
             return;
         }
 
-        
-
         try {
             const userData = {
                 name: name,
                 email: email,
-                password: password,
-                confirmpassword: confirmpassword
+                password: password
             };
-            console.log(userData);
             const response = await axios.post('/api/auth/signup', userData);
 
             // Check if signup was successful
-            if (response.status === 200) {
+            if (response.status === 201) {
                 console.log('Signup successful');
-                // Redirect or show success message
+                // Show success message
+                Swal.fire({
+                    title: "Signup Successful",
+                    text: "You have successfully signed up.",
+                    icon: "success"
+                });
+                // Optionally, redirect to another page
             } else {
-                // Handle other responses if needed
                 console.error('Signup failed');
+                setError('Signup failed. Please try again.');
             }
         } catch (error) {
             setError(error.message);
