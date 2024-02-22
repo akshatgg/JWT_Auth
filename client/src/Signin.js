@@ -56,6 +56,7 @@ const Signin = () => {
         } catch (error) {
             // Handle errors
             setError(error.message);
+            
         }
     };
 
